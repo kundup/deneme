@@ -23,6 +23,9 @@ player_rect = player_surface.get_rect(midbottom=(90, 300))
 snail_surface = pygame.image.load("snail1.png").convert_alpha()
 snail_rect = snail_surface.get_rect(midbottom=(700, 300))
 player_gravity = 0
+
+# game status
+game_active = 1
 def snail_move():
     snail_rect.x -= 6
     if snail_rect.x < -50: snail_rect.left = 800
@@ -33,33 +36,38 @@ def snail_move():
 # Game loop
 running = True
 while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    if game_active:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and player_rect.bottom == 300:
-                player_gravity = -20
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player_rect.bottom == 300:
+                    player_gravity = -20
 
 
 
-    screen.blit(sky_surface, (0, 0))
-    screen.blit(ground_surface, (0, 300))
+        screen.blit(sky_surface, (0, 0))
+        screen.blit(ground_surface, (0, 300))
 
-    player_gravity += 1
-    player_rect.y += player_gravity
-    if player_rect.bottom >= 300: player_rect.bottom = 300
-    screen.blit(player_surface, player_rect)
-    # snail movement
-    snail_move()
-    screen.blit(font_surf, font_rect)
-    # collison
-    if snail_rect.colliderect(player_rect):
+        player_gravity += 1
+        player_rect.y += player_gravity
+        if player_rect.bottom >= 300: player_rect.bottom = 300
+        screen.blit(player_surface, player_rect)
+        # snail movement
+        snail_move()
+        screen.blit(font_surf, font_rect)
+        # collison
+        if snail_rect.colliderect(player_rect):
+            game_active = 0
+
+        pygame.display.update()
+        clock.tick(60)
+    else:
         pygame.quit()
         exit()
 
-    pygame.display.update()
-    clock.tick(60)
+
 
 
 pygame.quit()
