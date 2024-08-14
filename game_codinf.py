@@ -7,6 +7,12 @@ clock = pygame.time.Clock()
 font_score = pygame.font.Font("Pixeltype.ttf", 40)
 font_surf = font_score.render("My time: ", False, (0, 0, 0))
 font_rect = font_surf.get_rect(midbottom=(400, 50))
+total_score = 0
+
+# font config for restart window
+restart_window = font_score.render("Press Esc to Run", False, (255, 255, 255))
+restart_window = pygame.transform.rotozoom(restart_window, 0, 1.6)
+restart_window_rect = restart_window.get_rect(center=(400, 50))
 
 # display surface
 screen = pygame.display.set_mode((800, 400))
@@ -18,6 +24,10 @@ ground_surface = pygame.image.load("ground.png").convert()
 # Player config
 player_surface = pygame.image.load("player_walk_1.png").convert_alpha()
 player_rect = player_surface.get_rect(midbottom=(90, 300))
+
+# player config for restart page
+player_stand = pygame.transform.rotozoom(player_surface, 0, 2)
+player_stand_rect = player_stand.get_rect(center=(400, 200))
 
 # snail config
 snail_surface = pygame.image.load("snail1.png").convert_alpha()
@@ -36,6 +46,7 @@ def display_score():
     score_surf = font_score.render(f"My Score: {current_time}", False, (0, 0, 0))
     score_rect = score_surf.get_rect(center=(400, 50))
     screen.blit(score_surf, score_rect)
+    return current_time
 
 
 def snail_move():
@@ -72,7 +83,7 @@ while running:
         screen.blit(player_surface, player_rect)
 
         # font surface
-        display_score()
+        total_score = display_score()
 
         # snail movement
         snail_move()
@@ -82,7 +93,12 @@ while running:
             game_active = 0
 
     else:
-        screen.fill("olive")
+        screen.fill((90, 120, 160))
+        screen.blit(player_stand, player_stand_rect)
+        screen.blit(restart_window, restart_window_rect)
+        score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
+        score_message_rect = score_message.get_rect(center=(400, 315))
+        screen.blit(score_message, score_message_rect)
 
     pygame.display.update()
     clock.tick(60)
