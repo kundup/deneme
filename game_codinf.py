@@ -1,5 +1,4 @@
 import pygame
-from pygame import locals
 
 pygame.init()
 
@@ -28,6 +27,15 @@ player_gravity = 0
 # game status
 game_active = 1
 
+# game score added
+game_score = 0
+
+def display_score():
+    current_time = (pygame.time.get_ticks() - game_score) // 1000
+    score_surf = font_score.render(f"My Score: {current_time}", False, (0, 0, 0))
+    score_rect = score_surf.get_rect(center=(400, 50))
+    screen.blit(score_surf, score_rect)
+
 
 def snail_move():
     snail_rect.x -= 6
@@ -50,26 +58,32 @@ while running:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = 1
                 snail_rect.left = 800
-    if game_active:
+                game_score = pygame.time.get_ticks()
 
+    if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, 300))
 
+        # player y direction movement
         player_gravity += 1
         player_rect.y += player_gravity
         if player_rect.bottom >= 300: player_rect.bottom = 300
         screen.blit(player_surface, player_rect)
+
+        # font surface
+        display_score()
+
         # snail movement
         snail_move()
-        screen.blit(font_surf, font_rect)
+
         # collison
         if snail_rect.colliderect(player_rect):
             game_active = 0
+
     else:
-        screen.fill("brown")
+        screen.fill("olive")
 
     pygame.display.update()
     clock.tick(60)
-
 
 pygame.quit()
