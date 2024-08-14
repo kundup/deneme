@@ -53,6 +53,10 @@ while running:
     # snail movement
     snail_move()
     screen.blit(font_surf, font_rect)
+    # collison
+    if snail_rect.colliderect(player_rect):
+        pygame.quit()
+        exit()
 
     pygame.display.update()
     clock.tick(60)
