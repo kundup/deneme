@@ -30,6 +30,7 @@ game_active = 1
 # game score added
 game_score = 0
 
+
 def display_score():
     current_time = (pygame.time.get_ticks() - game_score) // 1000
     score_surf = font_score.render(f"My Score: {current_time}", False, (0, 0, 0))
