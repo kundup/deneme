@@ -31,8 +31,14 @@ player_stand = pygame.transform.rotozoom(player_surface, 0, 2)
 player_stand_rect = player_stand.get_rect(center=(400, 200))
 
 # snail config
-snail_surface = pygame.image.load("snail1.png").convert_alpha()
+snail_anime1 = pygame.image.load("spider_walk1.png").convert_alpha()
+snail_anime2 = pygame.image.load("spider_walk2.png").convert_alpha()
 # snail_rect = snail_surface.get_rect(midbottom=(900, 300))
+snail_animation = [snail_anime1,snail_anime2]
+snail_index = 0
+snail_surface = snail_animation[snail_index]
+
+
 player_gravity = 0
 
 # fly config
@@ -105,6 +111,9 @@ pygame.time.set_timer(enemy_timer, 900)
 fly_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(fly_timer, 200)
 
+snail_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(snail_timer, 300)
+
 # Game loop
 running = True
 while running:
@@ -129,6 +138,13 @@ while running:
                 else:
                     fly_index = 0
                 fly_surface = fly_animation[fly_index]
+
+            if event.type == snail_timer:
+                if snail_index == 0:
+                    snail_index = 1
+                else:
+                    snail_index = 0
+                snail_surface = snail_animation[snail_index]
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = 1
@@ -186,3 +202,4 @@ pygame.quit()
 # 3 jump animation
 # 4 keep logs
 # 5 entry screen (done)
+# 6 character profile changes
