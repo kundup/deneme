@@ -40,21 +40,22 @@ fly_anime1 = pygame.image.load("Fly1.png").convert_alpha()
 fly_anime2 = pygame.image.load("Fly2.png").convert_alpha()
 fly_animation = [fly_anime1, fly_anime2]
 fly_index = 0
-
+fly_surface = fly_animation[fly_index]
 # fly_rect = snail_surface.get_rect(midbottom=(900, 210))
 
 # enemy list
 enemy_rect_list = []
 
 # game status
-game_active = 1
+game_active = 0
 
 # game score added
 game_score = 0
 
 # game music
-background_music =pygame.mixer.Sound("music.wav")
+background_music = pygame.mixer.Sound("music.wav")
 background_music.play(loops=-1)
+
 
 def display_score():
     current_time = (pygame.time.get_ticks() - game_score) // 1000
@@ -163,12 +164,25 @@ while running:
         screen.fill((90, 120, 160))
         screen.blit(player_stand, player_stand_rect)
         screen.blit(restart_window, restart_window_rect)
-        score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
+
+        # Game Entry restoration
+        if total_score != 0:
+            score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
+        else:
+            score_message = font_score.render(f" Wellcome the Game ", False, (255, 255, 255))
         score_message_rect = score_message.get_rect(center=(400, 315))
         screen.blit(score_message, score_message_rect)
+
         enemy_rect_list.clear()
 
     pygame.display.update()
     clock.tick(60)
 
 pygame.quit()
+
+# updates:
+# 1. new enemy adding
+# 2 fire ball adding
+# 3 jump animation
+# 4 keep logs
+# 5 entry screen (done)
