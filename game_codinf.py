@@ -10,7 +10,7 @@ font_rect = font_surf.get_rect(midbottom=(400, 50))
 total_score = 0
 
 # font config for restart window
-restart_window = font_score.render("Press Esc to Run", False, (255, 255, 255))
+restart_window = font_score.render("Press Spc to Run", False, (255, 255, 255))
 restart_window = pygame.transform.rotozoom(restart_window, 0, 1.6)
 restart_window_rect = restart_window.get_rect(center=(400, 50))
 
@@ -34,6 +34,10 @@ snail_surface = pygame.image.load("snail1.png").convert_alpha()
 snail_rect = snail_surface.get_rect(midbottom=(700, 300))
 player_gravity = 0
 
+# fly config
+fly_surface = pygame.image.load("fly1.png").convert_alpha()
+fly_rect = snail_surface.get_rect(midbottom=(900, 210))
+
 # game status
 game_active = 1
 
@@ -50,9 +54,15 @@ def display_score():
 
 
 def snail_move():
-    snail_rect.x -= 6
+    snail_rect.x -= 11
     if snail_rect.x < -50: snail_rect.left = 800
     screen.blit(snail_surface, snail_rect)
+
+def fly_move():
+    fly_rect.x -= 9
+    if fly_rect.x <= -70: fly_rect.left = 800
+    screen.blit(fly_surface,fly_rect)
+
 
 
 # Game loop
@@ -87,6 +97,9 @@ while running:
 
         # snail movement
         snail_move()
+
+        # fly movement
+        fly_move()
 
         # collison
         if snail_rect.colliderect(player_rect):
