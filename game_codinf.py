@@ -58,11 +58,11 @@ def snail_move():
     if snail_rect.x < -50: snail_rect.left = 800
     screen.blit(snail_surface, snail_rect)
 
+
 def fly_move():
     fly_rect.x -= 9
-    if fly_rect.x <= -70: fly_rect.left = 800
-    screen.blit(fly_surface,fly_rect)
-
+    if fly_rect.x <= -50: fly_rect.left = 800
+    screen.blit(fly_surface, fly_rect)
 
 
 # Game loop
@@ -79,7 +79,7 @@ while running:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = 1
-                snail_rect.left = 800
+                snail_rect.left, fly_rect.left = 790, 850
                 game_score = pygame.time.get_ticks()
 
     if game_active:
@@ -102,7 +102,7 @@ while running:
         fly_move()
 
         # collison
-        if snail_rect.colliderect(player_rect):
+        if snail_rect.colliderect(player_rect) or fly_rect.colliderect(player_rect):
             game_active = 0
 
     else:
