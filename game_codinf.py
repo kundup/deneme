@@ -60,7 +60,7 @@ def display_score():
 def enemy_movement(enemy_list):
     if enemy_list:
         for enemy in enemy_list:
-            enemy.x -= 5
+            enemy.x -= 6.5
             if enemy.bottom == 300: screen.blit(snail_surface, enemy)
 
             else:
@@ -88,7 +88,7 @@ def collision(player_rect, enemy):
 #   screen.blit(fly_surface, fly_rect)
 
 enemy_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy_timer, 1000)
+pygame.time.set_timer(enemy_timer, 900)
 
 # Game loop
 running = True
