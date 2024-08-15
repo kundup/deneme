@@ -52,6 +52,9 @@ game_active = 1
 # game score added
 game_score = 0
 
+# game music
+background_music =pygame.mixer.Sound("music.wav")
+background_music.play(loops=-1)
 
 def display_score():
     current_time = (pygame.time.get_ticks() - game_score) // 1000
