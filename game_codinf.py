@@ -32,12 +32,15 @@ player_stand_rect = player_stand.get_rect(center=(400, 200))
 
 # snail config
 snail_surface = pygame.image.load("snail1.png").convert_alpha()
-snail_rect = snail_surface.get_rect(midbottom=(700, 300))
+#snail_rect = snail_surface.get_rect(midbottom=(900, 300))
 player_gravity = 0
 
 # fly config
 fly_surface = pygame.image.load("fly1.png").convert_alpha()
-fly_rect = snail_surface.get_rect(midbottom=(900, 210))
+#fly_rect = snail_surface.get_rect(midbottom=(900, 210))
+
+# enemy list
+enemy_rect_list = []
 
 # game status
 game_active = 1
@@ -54,17 +57,38 @@ def display_score():
     return current_time
 
 
-def snail_move():
-    snail_rect.x -= randint(9,11)
-    if snail_rect.x <=-50: snail_rect.left = randint(790, 900)
-    screen.blit(snail_surface, snail_rect)
+def enemy_movement(enemy_list):
+    if enemy_list:
+        for enemy in enemy_list:
+            enemy.x -= 5
+            if enemy.bottom == 300: screen.blit(snail_surface, enemy)
+
+            else:
+                screen.blit(fly_surface, enemy)
+
+        enemy_list = [enemy for enemy in enemy_list if enemy.x >= -100]
+        return enemy_list
+    else:
+        return []
+def collision(player_rect, enemy):
+    if enemy:
+        for i in enemy:
+            if player_rect.colliderect(i): return 0
+    return 1
+
+# def snail_move():
+#     snail_rect.x -= randint(9,11)
+#     if snail_rect.x <=-50: snail_rect.left = randint(790, 900)
+#     screen.blit(snail_surface, snail_rect)
 
 
-def fly_move():
-    fly_rect.x -= randint(8, 10)
-    if fly_rect.x <= -50: fly_rect.left = randint(800, 850)
-    screen.blit(fly_surface, fly_rect)
+# def fly_move():
+#   fly_rect.x -= randint(8, 10)
+#   if fly_rect.x <= -50: fly_rect.left = randint(800, 850)
+#   screen.blit(fly_surface, fly_rect)
 
+enemy_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_timer, 1000)
 
 # Game loop
 running = True
@@ -77,10 +101,16 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player_rect.bottom == 300:
                     player_gravity = -20
+
+            if event.type == enemy_timer:
+                if randint(0,2):
+                    enemy_rect_list.append(snail_surface.get_rect(midbottom=(800, 300)))
+                else:
+                    enemy_rect_list.append(fly_surface.get_rect(midbottom=(800, 210)))
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = 1
-                snail_rect.left, fly_rect.left = randint(795, 1050), randint(800,950)
+                #snail_rect.left, fly_rect.left = randint(795, 1050), randint(800, 950)
                 game_score = pygame.time.get_ticks()
 
     if game_active:
@@ -93,19 +123,21 @@ while running:
         if player_rect.bottom >= 300: player_rect.bottom = 300
         screen.blit(player_surface, player_rect)
 
+        enemy_rect_ist = enemy_movement(enemy_rect_list)
+
         # font surface
         total_score = display_score()
 
         # snail movement
-        snail_move()
+        # snail_move()
 
         # fly movement
-        fly_move()
+        # fly_move()
 
         # collison
-        if snail_rect.colliderect(player_rect) or fly_rect.colliderect(player_rect):
-            game_active = 0
-
+        # if snail_rect.colliderect(player_rect) or fly_rect.colliderect(player_rect):
+        #     game_active = 0
+        game_active = collision(player_rect, enemy_rect_list)
     else:
         screen.fill((90, 120, 160))
         screen.blit(player_stand, player_stand_rect)
@@ -113,6 +145,7 @@ while running:
         score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
         score_message_rect = score_message.get_rect(center=(400, 315))
         screen.blit(score_message, score_message_rect)
+        enemy_rect_list.clear()
 
     pygame.display.update()
     clock.tick(60)
