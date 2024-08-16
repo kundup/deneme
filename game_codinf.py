@@ -57,7 +57,7 @@ game_active = 0
 
 # game score added
 game_score = 0
-
+game_higher = 0
 # game music
 background_music = pygame.mixer.Sound("music.wav")
 background_music.play(loops=-1)
@@ -92,6 +92,12 @@ def collision(player_rect, enemy):
         for i in enemy:
             if player_rect.colliderect(i): return 0
     return 1
+
+def higher_score():
+    global game_higher
+    if total_score > game_higher:
+        game_higher = total_score
+
 
 
 # def snail_move():
@@ -165,6 +171,7 @@ while running:
 
         # font surface
         total_score = display_score()
+        higher_score()
 
         # snail movement
         # snail_move()
@@ -181,13 +188,19 @@ while running:
         screen.blit(player_stand, player_stand_rect)
         screen.blit(restart_window, restart_window_rect)
 
+
+        high = font_score.render(f"High score: {game_higher}", False, (255,255,255))
+        high_rect = high.get_rect(center=(400, 95))
         # Game Entry restoration
         if total_score != 0:
             score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
         else:
             score_message = font_score.render(f" Wellcome the Game ", False, (255, 255, 255))
+
         score_message_rect = score_message.get_rect(center=(400, 315))
         screen.blit(score_message, score_message_rect)
+        screen.blit(high, high_rect)
+
 
         enemy_rect_list.clear()
 
