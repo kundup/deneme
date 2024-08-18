@@ -1,5 +1,6 @@
 import pygame
 from random import randint, choice
+import json
 
 pygame.init()
 
@@ -23,21 +24,20 @@ sky_surface = pygame.image.load("Sky.png").convert()
 ground_surface = pygame.image.load("ground.png").convert()
 
 # Player config
-player_surface = pygame.image.load("player_walk_1.png").convert_alpha()
+player_surface = pygame.image.load("image2.png").convert_alpha()
 player_rect = player_surface.get_rect(midbottom=(90, 300))
 
 # player config for restart page
 player_stand = pygame.transform.rotozoom(player_surface, 0, 2)
-player_stand_rect = player_stand.get_rect(center=(400, 200))
+player_stand_rect = player_stand.get_rect(center=(400, 210))
 
 # snail config
 snail_anime1 = pygame.image.load("spider_walk1.png").convert_alpha()
 snail_anime2 = pygame.image.load("spider_walk2.png").convert_alpha()
 # snail_rect = snail_surface.get_rect(midbottom=(900, 300))
-snail_animation = [snail_anime1,snail_anime2]
+snail_animation = [snail_anime1, snail_anime2]
 snail_index = 0
 snail_surface = snail_animation[snail_index]
-
 
 player_gravity = 0
 
@@ -53,11 +53,17 @@ fly_surface = fly_animation[fly_index]
 enemy_rect_list = []
 
 # game status
-game_active = 0
+game_active = False
 
 # game score added
 game_score = 0
 game_higher = 0
+
+# data file for high score log
+data = {"highest": game_higher}
+with open("data.txt") as high_file:
+    data = json.load(high_file)
+
 # game music
 background_music = pygame.mixer.Sound("music.wav")
 background_music.play(loops=-1)
@@ -90,14 +96,14 @@ def enemy_movement(enemy_list):
 def collision(player_rect, enemy):
     if enemy:
         for i in enemy:
-            if player_rect.colliderect(i): return 0
-    return 1
+            if player_rect.colliderect(i): return False
+    return True
+
 
 def higher_score():
-    global game_higher
-    if total_score > game_higher:
-        game_higher = total_score
-
+    global data
+    if total_score > data["highest"]:
+        data["highest"] = total_score
 
 
 # def snail_move():
@@ -125,6 +131,8 @@ running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            with open("data.txt", "w") as high_score_file:
+                json.dump(data, high_score_file)
             running = False
 
         if game_active:
@@ -153,7 +161,7 @@ while running:
                 snail_surface = snail_animation[snail_index]
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                game_active = 1
+                game_active = True
                 # snail_rect.left, fly_rect.left = randint(795, 1050), randint(800, 950)
                 game_score = pygame.time.get_ticks()
 
@@ -173,6 +181,7 @@ while running:
         total_score = display_score()
         higher_score()
 
+
         # snail movement
         # snail_move()
 
@@ -181,15 +190,14 @@ while running:
 
         # collison
         # if snail_rect.colliderect(player_rect) or fly_rect.colliderect(player_rect):
-        #     game_active = 0
+        #     game_active = False
         game_active = collision(player_rect, enemy_rect_list)
     else:
         screen.fill((90, 120, 160))
         screen.blit(player_stand, player_stand_rect)
         screen.blit(restart_window, restart_window_rect)
 
-
-        high = font_score.render(f"High score: {game_higher}", False, (255,255,255))
+        high = font_score.render(f'High score: {data["highest"]}', False, (255, 255, 255))
         high_rect = high.get_rect(center=(400, 95))
         # Game Entry restoration
         if total_score != 0:
@@ -197,10 +205,9 @@ while running:
         else:
             score_message = font_score.render(f" Wellcome the Game ", False, (255, 255, 255))
 
-        score_message_rect = score_message.get_rect(center=(400, 315))
+        score_message_rect = score_message.get_rect(center=(400, 330))
         screen.blit(score_message, score_message_rect)
         screen.blit(high, high_rect)
-
 
         enemy_rect_list.clear()
 
@@ -210,9 +217,11 @@ while running:
 pygame.quit()
 
 # updates:
-# 1. new enemy adding
+# 1. new enemy adding (done)
 # 2 fire ball adding
 # 3 jump animation
 # 4 keep logs
+# 4 higher score added(done)
 # 5 entry screen (done)
-# 6 character profile changes
+# 6 character profile changes (done)
+# 7 binary format and downloadable
