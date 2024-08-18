@@ -181,7 +181,6 @@ while running:
         total_score = display_score()
         higher_score()
 
-
         # snail movement
         # snail_move()
 
