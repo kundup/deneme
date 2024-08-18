@@ -24,11 +24,14 @@ sky_surface = pygame.image.load("Sky.png").convert()
 ground_surface = pygame.image.load("ground.png").convert()
 
 # Player config
-player_surface = pygame.image.load("image2.png").convert_alpha()
-player_rect = player_surface.get_rect(midbottom=(90, 300))
+player_anime_1 = pygame.image.load("player_walk_1.png").convert_alpha()
+player_anime_2 = pygame.image.load("player_walk_2.png").convert_alpha()
+player_surface = [player_anime_1, player_anime_2]
+player_index = 0
+player_rect = player_surface[player_index].get_rect(midbottom=(90, 300))
 
 # player config for restart page
-player_stand = pygame.transform.rotozoom(player_surface, 0, 2)
+player_stand = pygame.transform.rotozoom(player_anime_1, 0, 2)
 player_stand_rect = player_stand.get_rect(center=(400, 210))
 
 # snail config
@@ -173,7 +176,11 @@ while running:
         player_gravity += 1
         player_rect.y += player_gravity
         if player_rect.bottom >= 300: player_rect.bottom = 300
-        screen.blit(player_surface, player_rect)
+
+        # player animation
+        player_index += 0.15
+        if player_index >= 2: player_index = 0
+        screen.blit(player_surface[int(player_index)], player_rect)
 
         enemy_rect_ist = enemy_movement(enemy_rect_list)
 
@@ -216,11 +223,14 @@ while running:
 pygame.quit()
 
 # updates:
-# 1. new enemy adding (done)
-# 2 fire ball adding
-# 3 jump animation
-# 4 keep logs
-# 4 higher score added(done)
-# 5 entry screen (done)
-# 6 character profile changes (done)
-# 7 binary format and downloadable
+# new enemy adding (done)
+# higher score added(done)
+# entry screen (done)
+# character profile changes (done)
+# jump animation
+# keep logs
+# binary format and downloadable
+# adding effects when breaking high score
+# after high score game getting more difficult
+# more player selection option at the beginning screen
+# fire ball adding
