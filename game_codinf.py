@@ -21,8 +21,9 @@ restart_window = font_score.render("Press Spc to Run", False, (255, 255, 255))
 restart_window = pygame.transform.rotozoom(restart_window, 0, 1.6)
 restart_window_rect = restart_window.get_rect(center=(400, 50))
 
-# display surface
+# display surface and game name
 screen = pygame.display.set_mode((800, 400))
+game_name = pygame.display.set_caption("Creator")
 
 # sky surface, ground surface
 sky_surface = pygame.image.load("Sky.png").convert()
@@ -195,7 +196,7 @@ while running:
         if player_index >= 2: player_index = 0
         screen.blit(player_surface[int(player_index)], player_rect)
 
-        enemy_rect_ist = enemy_movement(enemy_rect_list)
+        enemy_rect_list = enemy_movement(enemy_rect_list)
 
         # font surface
         total_score = display_score()
@@ -250,7 +251,8 @@ pygame.quit()
 # adding effects when breaking high score (done)
 # binary format and downloadable (done by pyinstaller name --onefile --windowed)
 # player jump animation
-# keep logs
-# after high score game getting more difficult
-# more player selection option at the beginning screen
+# after some points, creating weather conditions accordingly difficulty level
+# keep logs (asking user name and assign user name to the high point)
+# more player character selection option at the beginning screen
 # fire ball adding
+
