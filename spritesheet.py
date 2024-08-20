@@ -31,7 +31,7 @@ class ParticleStar:
         self.effect_start_time = pygame.time.get_ticks()  # Efekti başlatma zamanını kaydet
 
     def update(self):
-        # Efektin süresini kontrol et
+        # effect time control
         if self.effect_active and (pygame.time.get_ticks() - self.effect_start_time) > self.effect_duration:
             self.effect_active = False
             self.confetti_list.clear()  # Listeyi temizle
