@@ -1,8 +1,13 @@
 import pygame
-from random import randint, choice
+from random import randint, random
 import json
+from spritesheet import ParticleStar
+from time import time
 
 pygame.init()
+
+# import ParticleStar and creating new instance
+confetti_effect = ParticleStar("star.png")
 
 clock = pygame.time.Clock()
 # Font
@@ -60,10 +65,11 @@ game_active = False
 
 # game score added
 game_score = 0
-game_higher = 0
+start_time = 0
+high_score_broken = True
 
 # data file for high score log
-data = {"highest": game_higher}
+data = {"highest": 0}
 with open("data.txt") as high_file:
     data = json.load(high_file)
 
@@ -104,12 +110,15 @@ def collision(player_rect, enemy):
 
 
 def higher_score():
-    global data
+    global data, start_time, high_score_broken
     if total_score > data["highest"]:
         data["highest"] = total_score
+        if not confetti_effect.effect_active and high_score_broken:  # Efekt zaten aktif değilse
+            confetti_effect.trigger_confetti_effect()
+            high_score_broken = False
 
+    # def snail_move():
 
-# def snail_move():
 #     snail_rect.x -= randint(9,11)
 #     if snail_rect.x <=-50: snail_rect.left = randint(790, 900)
 #     screen.blit(snail_surface, snail_rect)
@@ -162,11 +171,15 @@ while running:
                 else:
                     snail_index = 0
                 snail_surface = snail_animation[snail_index]
+
+
+
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
                 # snail_rect.left, fly_rect.left = randint(795, 1050), randint(800, 950)
                 game_score = pygame.time.get_ticks()
+                high_score_broken = True
 
     if game_active:
         screen.blit(sky_surface, (0, 0))
@@ -188,7 +201,13 @@ while running:
         total_score = display_score()
         higher_score()
 
-        # snail movement
+        if confetti_effect.effect_active:
+            confetti_effect.add_confetti(randint(0, 800), randint(0, 400))
+            confetti_effect.move_confetti()
+            confetti_effect.draw_confetti(screen)
+            confetti_effect.update()
+
+            # snail movement
         # snail_move()
 
         # fly movement
@@ -209,7 +228,7 @@ while running:
         if total_score != 0:
             score_message = font_score.render(f"Your Score: {total_score}", False, (255, 255, 255))
         else:
-            score_message = font_score.render(f" Wellcome the Game ", False, (255, 255, 255))
+            score_message = font_score.render(f" Wellcome to the Game ", False, (255, 255, 255))
 
         score_message_rect = score_message.get_rect(center=(400, 330))
         screen.blit(score_message, score_message_rect)
@@ -227,10 +246,11 @@ pygame.quit()
 # higher score added(done)
 # entry screen (done)
 # character profile changes (done)
-# jump animation
+# player run animation (done)
+# adding effects when breaking high score (done)
+# binary format and downloadable (done by pyinstaller name --onefile --windowed)
+# player jump animation
 # keep logs
-# binary format and downloadable
-# adding effects when breaking high score
 # after high score game getting more difficult
 # more player selection option at the beginning screen
 # fire ball adding
